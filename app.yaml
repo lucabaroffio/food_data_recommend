@@ -6,4 +6,4 @@ handlers:
 - url: /epicurious-recipes-with-rating-and-nutrition
   static_dir: epicurious-recipes-with-rating-and-nutrition
 - url: /.*
-  script: src/services.app
+  script: /src/services.app
