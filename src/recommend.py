@@ -36,7 +36,7 @@ def main():
 	recipe_similarity = recipe_similarity - np.identity(len(recipe_similarity))
 	print 'done'
 
-	for idx in xrange(10):
+	for idx in xrange(20):
 		print recipe_names[idx]
 		print '\n'
 		most_similar = np.argsort(recipe_similarity[idx])[::-1]
