@@ -3,10 +3,12 @@ import numpy as np
 from sklearn.preprocessing import normalize
 from scipy import sparse
 import pickle
-from misc import Similarity_model
+from model import Similarity_model
 
 INPUT_FILE = '../epicurious-recipes-with-rating-and-nutrition/epi_r.csv'
 INGREDIENT_START_COL = 6
+OUTPUT_MODEL_FILE = '../epicurious-recipes-with-rating-and-nutrition/recom_model.pkl'
+STORE_RECIPE_SIMILARITY = False
 
 def main():
 
@@ -43,28 +45,29 @@ def main():
 	print 'done'
 
 	model = Similarity_model(
-		recipe_similarity,
-		ingredient_similarity,
-		recipe_names,
-		ingredient_names
+		recipe_similarity=recipe_similarity if STORE_RECIPE_SIMILARITY else None,
+		ingredient_similarity=ingredient_similarity,
+		recipe_names=recipe_names,
+		ingredient_names=ingredient_names,
+		store_triangular=False
 	)
 
 	print 'saving data...'
-	with open('../epicurious-recipes-with-rating-and-nutrition/model.pkl', 'wb') as output:
+	with open(OUTPUT_MODEL_FILE, 'wb') as output:
 		pickle.dump(model, output)
 	print 'done'
 
-	for idx in xrange(50):
-		print recipe_names[idx]
-		print '\n'
-		most_similar = np.argsort(recipe_similarity[idx])[::-1]
+	# for idx in xrange(50):
+	# 	print recipe_names[idx]
+	# 	print '\n'
+	# 	most_similar = np.argsort(recipe_similarity[idx])[::-1]
 
-		for similar_idx in most_similar[0:5]:
-			print recipe_names[similar_idx]
+	# 	for similar_idx in most_similar[0:5]:
+	# 		print recipe_names[similar_idx]
 
-		print '\n\n\n'
+	# 	print '\n\n\n'
 
-	print 'most similar items\n\n'
+	# print 'most similar items\n\n'
 
 if __name__ == "__main__":
 	main()

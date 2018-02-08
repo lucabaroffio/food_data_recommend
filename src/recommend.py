@@ -3,7 +3,7 @@ import pickle
 import click
 from misc import Similarity_model
 
-MODEL_FILE = '../epicurious-recipes-with-rating-and-nutrition/model.pkl'
+MODEL_FILE = '../epicurious-recipes-with-rating-and-nutrition/recom_model.pkl'
 N_RESULT = 10
 
 with open(MODEL_FILE, 'rb') as f:
@@ -26,6 +26,9 @@ def main(operation, n):
 	elif operation == "recipes":
 		print model.recipe_names
 	elif operation == "sim_rec":
+		if model.recipe_similarity == None:
+			print 'data not available in the model'
+			return
 		if n is None or n < 0:
 			print 'Please use --n to specify the base item'
 		else:
