@@ -1,0 +1,9 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /epicurious-recipes-with-rating-and-nutrition
+  static_dir: epicurious-recipes-with-rating-and-nutrition
+- url: /.*
+  script: src/services.app
