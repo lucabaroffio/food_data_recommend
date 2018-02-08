@@ -3,15 +3,10 @@ import numpy as np
 from sklearn.preprocessing import normalize
 from scipy import sparse
 import pickle
-import gzip
-from misc import similarity_model
+from misc import Similarity_model
 
 INPUT_FILE = '../epicurious-recipes-with-rating-and-nutrition/epi_r.csv'
 INGREDIENT_START_COL = 6
-
-def compute_similarity(mat):
-	similarity = np.matmul(mat, np.transpose(mat))
-	return similarity - np.identity(len(similarity))
 
 def main():
 
@@ -43,23 +38,21 @@ def main():
 	print 'done'
 
 	print 'computing similarity matrix...'
-	recipe_similarity = compute_similarity(recipe_to_ingredient_mat)
-	ingredient_similarity = compute_similarity(ingredient_to_recipe_mat)
+	recipe_similarity = Similarity_model.compute_similarity(recipe_to_ingredient_mat)
+	ingredient_similarity = Similarity_model.compute_similarity(ingredient_to_recipe_mat)
 	print 'done'
 
-	print recipe_similarity
+	model = Similarity_model(
+		recipe_similarity,
+		ingredient_similarity,
+		recipe_names,
+		ingredient_names
+	)
 
-	# model = similarity_model(
-	# 	recipe_similarity,
-	# 	ingredient_similarity,
-	# 	recipe_names,
-	# 	ingredient_names
-	# )
-
-	# print 'saving data...'
-	# with open('../epicurious-recipes-with-rating-and-nutrition/model.pkl.gz', 'wb') as output:
-	# 	pickle.dump(model, output)
-	# print 'done'
+	print 'saving data...'
+	with open('../epicurious-recipes-with-rating-and-nutrition/model.pkl', 'wb') as output:
+		pickle.dump(model, output)
+	print 'done'
 
 	for idx in xrange(50):
 		print recipe_names[idx]
@@ -72,21 +65,6 @@ def main():
 		print '\n\n\n'
 
 	print 'most similar items\n\n'
-
-	# recipe_similarity[recipe_similarity > 0.99] = 0
-	# most_similar_indexed = np.dstack(
-	# 	np.unravel_index(
-	# 		np.argsort(
-	# 			recipe_similarity.ravel()
-	# 		),
-	# 		recipe_similarity.shape
-	# 	)
-	# )[::-1]
-
-	# for idx in xrange(20):
-	# 	print recipe_names[most_similar_indexed[idx][0]]
-	# 	print recipe_names[most_similar_indexed[idx][1]]
-	# 	print '\n' 
 
 if __name__ == "__main__":
 	main()
