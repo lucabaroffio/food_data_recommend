@@ -4,6 +4,7 @@ import click
 from misc import Similarity_model
 
 MODEL_FILE = '../epicurious-recipes-with-rating-and-nutrition/model.pkl'
+N_RESULT = 10
 
 with open(MODEL_FILE, 'rb') as f:
 	model = pickle.load(f)
@@ -33,7 +34,7 @@ def main(operation, n):
 
 			most_similar = np.argsort(model.recipe_similarity[n])[::-1]
 			
-			for similar_idx in most_similar[0:5]:
+			for similar_idx in most_similar[0:N_RESULT]:
 				print model.recipe_names[similar_idx]
 
 	elif operation == "best_match_ingredient":
@@ -45,7 +46,7 @@ def main(operation, n):
 
 			most_similar = np.argsort(model.ingredient_similarity[n])[::-1]
 			
-			for similar_idx in most_similar[0:5]:
+			for similar_idx in most_similar[0:N_RESULT]:
 				print model.ingredient_names[similar_idx]
 	else:
 		print 'Please select a valid operation'
