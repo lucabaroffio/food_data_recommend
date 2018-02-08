@@ -1,24 +1,13 @@
 import csv
 import numpy as np
 from sklearn.preprocessing import normalize
+from scipy import sparse
 import pickle
 import gzip
+from misc import similarity_model
 
 INPUT_FILE = '../epicurious-recipes-with-rating-and-nutrition/epi_r.csv'
 INGREDIENT_START_COL = 6
-
-class similarity_model(object):
-	def __init__(self, 
-		recipe_to_ingredient_mat,
-		ingredient_to_recipe_mat,
-		recipe_names,
-		ingredient_names
-	):
-
-		self.recipe_to_ingredient_mat = recipe_to_ingredient_mat
-		self.ingredient_to_recipe_mat = ingredient_to_recipe_mat
-		self.recipe_names = recipe_names
-		self.ingredient_names = ingredient_names
 
 def compute_similarity(mat):
 	similarity = np.matmul(mat, np.transpose(mat))
@@ -58,27 +47,46 @@ def main():
 	ingredient_similarity = compute_similarity(ingredient_to_recipe_mat)
 	print 'done'
 
-	model = similarity_model(
-		recipe_to_ingredient_mat,
-		ingredient_to_recipe_mat,
-		recipe_names,
-		ingredient_names
-	)
+	print recipe_similarity
 
-	print 'saving data...'
-	with gzip.open('../epicurious-recipes-with-rating-and-nutrition/model.pkl.gz', 'wb') as output:
-		pickle.dump(model, output, pickle.HIGHEST_PROTOCOL)
-	print 'done'
+	# model = similarity_model(
+	# 	recipe_similarity,
+	# 	ingredient_similarity,
+	# 	recipe_names,
+	# 	ingredient_names
+	# )
+
+	# print 'saving data...'
+	# with open('../epicurious-recipes-with-rating-and-nutrition/model.pkl.gz', 'wb') as output:
+	# 	pickle.dump(model, output)
+	# print 'done'
+
+	for idx in xrange(50):
+		print recipe_names[idx]
+		print '\n'
+		most_similar = np.argsort(recipe_similarity[idx])[::-1]
+
+		for similar_idx in most_similar[0:5]:
+			print recipe_names[similar_idx]
+
+		print '\n\n\n'
+
+	print 'most similar items\n\n'
+
+	# recipe_similarity[recipe_similarity > 0.99] = 0
+	# most_similar_indexed = np.dstack(
+	# 	np.unravel_index(
+	# 		np.argsort(
+	# 			recipe_similarity.ravel()
+	# 		),
+	# 		recipe_similarity.shape
+	# 	)
+	# )[::-1]
 
 	# for idx in xrange(20):
-	# 	print recipe_names[idx]
-	# 	print '\n'
-	# 	most_similar = np.argsort(recipe_similarity[idx])[::-1]
-
-	# 	for similar_idx in most_similar[0:5]:
-	# 		print recipe_names[similar_idx]
-
-	# 	print '\n\n\n'
+	# 	print recipe_names[most_similar_indexed[idx][0]]
+	# 	print recipe_names[most_similar_indexed[idx][1]]
+	# 	print '\n' 
 
 if __name__ == "__main__":
 	main()
