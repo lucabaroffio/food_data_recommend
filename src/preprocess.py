@@ -2,6 +2,7 @@ import csv
 import numpy as np
 from sklearn.preprocessing import normalize
 import pickle
+import gzip
 
 INPUT_FILE = '../epicurious-recipes-with-rating-and-nutrition/epi_r.csv'
 INGREDIENT_START_COL = 6
@@ -65,7 +66,7 @@ def main():
 	)
 
 	print 'saving data...'
-	with open('../epicurious-recipes-with-rating-and-nutrition/model.pkl', 'wb') as output:
+	with gzip.open('../epicurious-recipes-with-rating-and-nutrition/model.pkl.gz', 'wb') as output:
 		pickle.dump(model, output, pickle.HIGHEST_PROTOCOL)
 	print 'done'
 
